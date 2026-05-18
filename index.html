@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三國群英・歷史戰略推演與史學思維網頁</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <style>
+        :root {
+            --primary-gold: #d4af37;
+            --wei-blue: #2e86de;
+            --shu-red: #ee5253;
+            --wu-green: #10ac84;
+            --bg-dark: #121212;
+            --card-bg: #1e1e1e;
+            --text-light: #e0e0e0;
+            --accent-orange: #ff9f43;
+            --sand-map-bg: #16161a;
+            --calm-teal: #00d2d3;
+        }
+
+        body {
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        header {
+            text-align: center;
+            padding: 25px 20px;
+            border-bottom: 3px solid var(--primary-gold);
+            background: linear-gradient(180deg, #222, #121212);
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        header h1 {
+            color: var(--primary-gold);
+            margin: 0 0 10px 0;
+            font-size: 2.6rem;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+            letter-spacing: 2px;
+        }
+
+        header p {
+            font-style: italic;
+            color: #b0b0b0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .container { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+        }
+
+        h2 {
+            color: var(--primary-gold);
+            border-left: 5px solid var(--primary-gold);
+            padding-left: 12px;
+            margin-top: 0;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* === 進度管理區塊 === */
+        .progress-section .kingdom-row {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid #2a2a2a;
+        }
+
+        .wei { border-top: 4px solid var(--wei-blue); }
+        .shu { border-top: 4px solid var(--shu-red); }
+        .wu { border-top: 4px solid var(--wu-green); }
+
+        .kingdom-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .kingdom-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .wei .kingdom-title { color: #54a0ff; }
+        .shu .kingdom-title { color: #ff6b6b; }
+        .wu .kingdom-title { color: #1dd1a1; }
+
+        .progress-bar-bg {
+            background-color: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 16px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease-out;
+        }
+
+        .wei .progress-bar-fill { background: linear-gradient(90deg, #2e86de, #54a0ff); }
+        .shu .progress-bar-fill { background: linear-gradient(90deg, #ee5253, #ff6b6b); }
+        .wu .progress-bar-fill { background: linear-gradient(90deg, #10ac84, #1dd1a1); }
+
+        .sub-phase {
+            margin-top: 15px;
+            background: rgba(255,255,255,0.03);
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        .sub-phase-title {
+            font-size: 0.95rem;
+            color: var(--primary-gold);
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .checkbox-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .checkbox-list label {
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            color: #ccc;
+            transition: color 0.2s;
+        }
+
+        .checkbox-list label:hover { color: #fff; }
+        .checkbox-list input { margin-right: 10px; margin-top: 3px; }
+
+        /* === 沙盤推演樣式 === */
+        .right-column { display: flex; flex-direction: column; gap: 30px; }
+        .sand-table-card { background-color: var(--sand-map-bg); border: 1px solid #3c4043; position: relative; padding: 15px; }
+        .sand-table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+        .sand-table-title { color: var(--primary-gold); font-size: 1.1rem; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        
+        .tab-bar { display: flex; overflow-x: auto; gap: 5px; margin-bottom: 10px; padding-bottom: 5px; }
+        .tab-btn { background-color: #222; color: #aaa; border: 1px solid #444; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; white-space: nowrap; transition: all 0.2s; }
+        .tab-btn:hover { border-color: var(--primary-gold); color: #fff; }
+        .tab-btn.active { background-color: var(--primary-gold); color: #000; border-color: var(--primary-gold); font-weight: bold; }
+
+        .sand-table-map { width: 100%; height: 380px; background: radial-gradient(circle, #1e1e24 0%, #0d0d11 100%); border-radius: 6px; border: 1px solid #2c2c35; overflow: hidden; position: relative; }
+        svg { width: 100%; height: 100%; }
+        .river { fill: none; stroke: #224466; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; opacity: 0.7; }
+        .march-line { fill: none; stroke-width: 3; stroke-dasharray: 8, 4; animation: march-animation 1.5s linear infinite; }
+        .march-line.wei-march { stroke: #54a0ff; }
+        .march-line.shu-march { stroke: #ff6b6b; }
+        .march-line.wu-march { stroke: #1dd1a1; }
+        .march-line.special-march { stroke: var(--accent-orange); }
+
+        @keyframes march-animation { to { stroke-dashoffset: -20; } }
+        .city-node { fill: #1a1a1a; stroke: var(--primary-gold); stroke-width: 2; }
+        .city-label { fill: #b0b0b0; font-size: 12px; font-family: sans-serif; text-shadow: 1px 1px 2px #000; }
+        .clash-point { fill: #ff2a2a; animation: pulse-clash 1s infinite alternate; }
+        @keyframes pulse-clash { 0% { r: 6; opacity: 0.5; } 100% { r: 12; opacity: 1; } }
+        .territory-label { font-size: 18px; font-weight: bold; opacity: 0.25; text-shadow: 2px 2px 4px #000; }
+        
+        .sand-table-desc-box { margin-top: 10px; background-color: rgba(0,0,0,0.5); border-left: 3px solid var(--accent-orange); padding: 10px 15px; font-size: 0.85rem; color: #ccc; border-radius: 0 4px 4px 0; min-height: 50px; }
+        .map-legend { display: flex; gap: 15px; font-size: 0.8rem; color: #aaa; margin-top: 10px; justify-content: center; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 4px; }
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .legend-color { width: 12px; height: 12px; border-radius: 50%; }
+
+        /* 答題情境框 */
+        .scenario-section .battle-box { background: linear-gradient(135deg, #252525, #151515); border: 1px solid #444; border-radius: 8px; padding: 25px; }
+        .battle-box.active-border { border-color: var(--primary-gold); }
+        .battle-nav { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--accent-orange); margin-bottom: 10px; font-weight: bold; }
+        .battle-title { font-size: 1.25rem; font-weight: bold; color: #fff; margin-bottom: 15px; border-bottom: 1px dashed #444; padding-bottom: 10px; }
+        .battle-desc { font-size: 0.95rem; line-height: 1.6; color: #cdcdcd; margin-bottom: 20px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; border-left: 3px solid var(--primary-gold); }
+        .option-btn { display: block; width: 100%; padding: 14px; margin-bottom: 12px; background-color: #2a2a2a; color: #e0e0e0; border: 1px solid #444; border-radius: 5px; cursor: pointer; text-align: left; font-size: 0.9rem; transition: all 0.2s ease; }
+        .option-btn:hover { background-color: #3a3a3a; border-color: var(--accent-orange); color: #fff; }
+        
+        #feedback { margin-top: 20px; padding: 15px; border-radius: 6px; font-size: 0.95rem; line-height: 1.6; display: none; }
+        .success { background-color: rgba(46, 204, 113, 0.15); border: 1px solid #2ecc71; color: #2ecc71; }
+        .failure { background-color: rgba(231, 76, 60, 0.15); border: 1px solid #e74c3c; color: #e74c3c; }
+        .next-btn { background-color: var(--primary-gold); color: #000; border: none; padding: 12px 24px; font-weight: bold; font-size: 0.95rem; border-radius: 5px; cursor: pointer; float: right; margin-top: 15px; display: none; }
+        .score-board { grid-column: 1 / -1; text-align: center; background: linear-gradient(90deg, #1e1e1e, #2d2d2d, #1e1e1e); padding: 15px; border-radius: 10px; border: 1px solid var(--primary-gold); font-size: 1.25rem; }
+        .score-board span { color: var(--accent-orange); font-weight: bold; }
+
+        /* === 歷史思維沉澱草堂 === */
+        .stress-relief-section { grid-column: 1 / -1; margin-top: 30px; background-color: var(--card-bg); border: 1px solid var(--primary-gold); border-radius: 12px; padding: 30px; }
+        .stress-grid { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 25px; margin-top: 20px; }
+        @media (max-width: 1024px) { .stress-grid { grid-template-columns: 1fr; } }
+        .stress-card { background: rgba(0, 0, 0, 0.4); border: 1px solid #333; border-radius: 8px; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+        .stress-card h3 { color: var(--primary-gold); margin-top: 0; font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 6px; }
+        
+        .muyu-container { position: relative; cursor: pointer; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; margin: 15px 0; }
+        .muyu-img { width: 100px; height: 100px; background: radial-gradient(circle, #5e3b15 0%, #2e1c0a 100%); border: 4px solid var(--primary-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; }
+        .muyu-img::after { content: "警世鐘"; color: var(--primary-gold); font-size: 14px; font-weight: bold; }
+        .muyu-stick { position: absolute; width: 12px; height: 60px; background: #d4af37; border-radius: 6px; top: 20px; right: 10px; transform-origin: bottom center; transform: rotate(30deg); transition: transform 0.05s; }
+        .float-text { position: absolute; color: var(--primary-gold); font-weight: bold; font-size: 16px; pointer-events: none; animation: floatUp 0.8s ease-out forwards; }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-80px) scale(1.2); opacity: 0; } }
+        
+        .pouch-row { display: flex; gap: 12px; width: 100%; justify-content: center; margin-bottom: 15px; }
+        .pouch-btn { background: linear-gradient(135deg, #a71d1d 0%, #610c0c 100%); border: 2px solid var(--primary-gold); border-radius: 6px; color: #fff; padding: 10px 14px; cursor: pointer; font-weight: bold; font-size: 0.85rem; flex: 1; }
+        #pouch-content { width: 100%; background: rgba(0,0,0,0.6); border: 1px dashed var(--primary-gold); border-radius: 6px; padding: 12px; font-size: 0.9rem; min-height: 80px; color: #e0e0e0; text-align: left; line-height: 1.6; }
+        
+        .breathing-ring-container { width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; position: relative; margin: 10px 0; }
+        .breathing-ring { width: 100px; height: 100px; border-radius: 50%; background: rgba(0, 210, 243, 0.15); border: 4px solid var(--calm-teal); box-shadow: 0 0 20px rgba(0, 210, 243, 0.4); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--calm-teal); font-size: 1rem; transition: transform 4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .breathing-instructions { font-size: 0.9rem; color: #b0b0b0; margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>三國群英・歷史戰略推演與史學思維網頁</h1>
+        <p>「觀歷史之興衰，推戰場之權謀。聚焦純粹三國局勢，啟發跨章節歷史因果思辨。」</p>
+    </header>
+
+    <div class="container">
+
+        <div class="score-board">
+            太史公三國史料研讀評級：<span id="strategist-rank">初出茅廬 (歷史版圖解鎖進度: 0%)</span>
+        </div>
+
+        <div class="card progress-section">
+            <h2><i class="fa-solid fa-book-open"></i> 三國歷史版圖與政權興衰解鎖進度</h2>
+            <p style="color: #aaa; font-size: 0.85rem; margin-bottom: 20px;">勾選已研讀並釐清的歷史核心課題，全面復原東漢末年至三分歸晉的史觀演進脈絡：</p>
+            
+            <div class="kingdom-row wei">
+                <div class="kingdom-header">
+                    <span class="kingdom-title"><i class="fa-solid fa-building-columns"></i> 【曹魏政權】中原兼併與制度重組（進度條）</span>
+                    <span id="wei-percent" style="font-weight: bold;">0%</span>
+                </div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="wei-bar"></div></div>
+                
+                <div class="sub-phase">
+                    <div class="sub-phase-title">第一階段：政權合法性建立（挾天子以令諸侯）</div>
+                    <div class="checkbox-list">
+                        <label><input type="checkbox" class="wei-cb" onclick="updateProgress()"> 釐清《三國志・武帝紀》中，曹操遷都許昌在政治統治正統性上的轉變因果。</label>
+                        <label><input type="checkbox" class="wei-cb" onclick="updateProgress()"> 分析許下屯田制的實施，對東漢末年北方崩潰的農業經濟與軍糧體制的重建作用。</label>
+                    </div>
+                </div>
+                <div class="sub-phase">
+                    <div class="sub-phase-title">第二階段：北方門閥政治博弈（官渡至魏代漢）</div>
+                    <div class="checkbox-list">
+                        <label><input type="checkbox" class="wei-cb" onclick="updateProgress()"> 論證官渡之戰前後，袁紹汝南世族集團與冀州本土豪族分崩離析的深層裂痕。</label>
+                        <label><input type="checkbox" class="wei-cb" onclick="updateProgress()"> 剖析陳群創立「九品官人法」對魏晉時期門閥世族政治體制的承襲與妥協。</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kingdom-row shu">
+                <div class="kingdom-header">
+                    <span class="kingdom-title"><i class="fa-solid fa-feather"></i> 【蜀漢政權】西南割據與意識形態（進度條）</span>
+                    <span id="shu-percent" style="font-weight: bold;">0%</span>
+                </div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="shu-bar"></div></div>
+                
+                <div class="sub-phase">
+                    <div class="sub-phase-title">第三階段：隆中對策的地緣實踐（跨有荊益）</div>
+                    <div class="checkbox-list">
+                        <label><input type="checkbox" class="shu-cb" onclick="updateProgress()"> 深入解構《隆中對》的地理與政治藍圖，探討雙線出擊對蜀漢兵力分散的內在缺陷。</label>
+                        <label><input type="checkbox" class="shu-cb" onclick="updateProgress()"> 辨析蜀漢內部「外來荊益軍政集團」與「益州本土世族」根深蒂固的權力張力。</label>
+                    </div>
+                </div>
+                <div class="sub-phase">
+                    <div class="sub-phase-title">第四階段：南中經略與北伐攻防（以攻為守）</div>
+                    <div class="checkbox-list">
+                        <label><input type="checkbox" class="shu-cb" onclick="updateProgress()"> 研讀諸葛亮《出師表》，論證南中治理（七擒孟獲）如何做為北伐物資與兵源的隱藏前置條件。</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kingdom-row wu">
+                <div class="kingdom-header">
+                    <span class="kingdom-title"><i class="fa-solid fa-ship"></i> 【東吳政權】江東偏安與豪族聯合（進度條）</span>
+                    <span id="wu-percent" style="font-weight: bold;">0%</span>
+                </div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="wu-bar"></div></div>
+                
+                <div class="sub-phase">
+                    <div class="sub-phase-title">第五階段：限江自保與世襲領兵制</div>
+                    <div class="checkbox-list">
+                        <label><input type="checkbox" class="wu-cb" onclick="updateProgress()"> 分析孫氏淮泗集團與顧、陸、朱、張江東四姓，如何透過世襲領兵制達成政權共治。</label>
+                        <label><input type="checkbox" class="wu-cb" onclick="updateProgress()"> 解碼東吳頻繁征討、平定「山越」對後方大開發與軍事常備兵源補充的決定性影響。</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-column">
+            
+            <div class="card sand-table-card">
+                <div class="sand-table-header">
+                    <span class="sand-table-title"><i class="fa-solid fa-map-location-dot"></i> 三國戰役動態軍事沙盤推演</span>
+                    <span style="font-size: 0.8rem; color: #aaa;">真實歷史行軍路線推演</span>
+                </div>
+                
+                <div class="tab-bar" id="sand-table-tabs"></div>
+
+                <div class="sand-table-map">
+                    <svg viewBox="0 0 600 380" id="sand-map">
+                        <defs>
+                            <marker id="arrow-wei" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 1 L 10 5 L 0 9 z" fill="#54a0ff" /></marker>
+                            <marker id="arrow-shu" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 1 L 10 5 L 0 9 z" fill="#ff6b6b" /></marker>
+                            <marker id="arrow-wu" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 1 L 10 5 L 0 9 z" fill="#1dd1a1" /></marker>
+                            <marker id="arrow-special" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 1 L 10 5 L 0 9 z" fill="#ff9f43" /></marker>
+                        </defs>
+                        <g opacity="0.05" stroke="#ffffff" stroke-width="1">
+                            <line x1="0" y1="50" x2="600" y2="50" /><line x1="0" y1="100" x2="600" y2="100" /><line x1="0" y1="150" x2="600" y2="150" /><line x1="0" y1="200" x2="600" y2="200" /><line x1="0" y1="250" x2="600" y2="250" /><line x1="0" y1="300" x2="600" y2="300" /><line x1="0" y1="350" x2="600" y2="350" />
+                            <line x1="100" y1="0" x2="100" y2="380" /><line x1="200" y1="0" x2="200" y2="380" /><line x1="300" y1="0" x2="300" y2="380" /><line x1="400" y1="0" x2="400" y2="380" /><line x1="500" y1="0" x2="500" y2="380" />
+                        </g>
+                        <path class="river" d="M 50 80 Q 150 50 220 90 T 380 70 T 550 90" />
+                        <path class="river" d="M 50 300 Q 180 280 270 320 T 430 300 T 550 280" />
+                        <text x="270" y="130" class="territory-label" fill="#2e86de">魏</text>
+                        <text x="120" y="270" class="territory-label" fill="#ee5253">蜀</text>
+                        <text x="450" y="320" class="territory-label" fill="#10ac84">吳</text>
+                        <g id="cities">
+                            <circle cx="300" cy="110" r="5" class="city-node" /><text x="310" y="115" class="city-label">洛陽</text>
+                            <circle cx="100" cy="250" r="5" class="city-node" /><text x="80" y="245" class="city-label">成都</text>
+                            <circle cx="480" cy="270" r="5" class="city-node" /><text x="490" y="275" class="city-label">建業</text>
+                            <circle cx="340" cy="260" r="5" class="city-node" /><text x="350" y="265" class="city-label">荊州</text>
+                        </g>
+                        <g id="tactical-layer"></g>
+                    </svg>
+                </div>
+
+                <div class="sand-table-desc-box" id="sand-table-desc">請選擇戰役以觀看地圖形勢推演...</div>
+                <div class="map-legend">
+                    <div class="legend-item"><div class="legend-color" style="background-color: var(--wei-blue);"></div>曹魏/北方</div>
+                    <div class="legend-item"><div class="legend-color" style="background-color: var(--shu-red);"></div>蜀漢/西南</div>
+                    <div class="legend-item"><div class="legend-color" style="background-color: var(--wu-green);"></div>東吳/江東</div>
+                    <div class="legend-item"><div class="legend-color" style="background-color: var(--accent-orange);"></div>奇襲/關鍵路線</div>
+                </div>
+            </div>
+
+            <div class="card scenario-section">
+                <h2><i class="fa-solid fa-swords"></i> 三國歷史綜合情境戰略抉擇</h2>
+                <p style="color: #aaa; font-size: 0.85rem;">化身當時代的歷史決策者，考驗對政治、地理、氏族矛盾的跨章節深度因果論證：</p>
+                
+                <div class="battle-box active-border">
+                    <div class="battle-nav">
+                        <span id="battle-index">事件 1 / 6</span>
+                        <span id="battle-status">戰略抉擇中</span>
+                    </div>
+                    <div class="battle-title" id="battle-name">載入中...</div>
+                    <div class="battle-desc" id="battle-question">載入中...</div>
+                    
+                    <div id="options-container"></div>
+                    
+                    <div id="feedback"></div>
+                    <button class="next-btn" id="next-btn" onclick="nextQuestion()">進入下一歷史事件</button>
+                    <div style="clear: both;"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="stress-relief-section">
+            <h2><i class="fa-solid fa-hourglass-start"></i> 史學草堂・考前歷史思維沉澱與專注</h2>
+            <p style="color: #bbb; font-size: 0.9rem; margin-top: -10px;">「讀史使人明智。」在進入考場進行繁複的史料申論寫作前，在此澄澈心神，活化大腦檢索路徑。</p>
+            
+            <div class="stress-grid">
+                <div class="stress-card">
+                    <h3><i class="fa-solid fa-bell"></i> 史學警世鐘・止息雜念</h3>
+                    <p style="font-size: 0.8rem; color: #aaa; margin: 0;">敲擊古鐘，放慢思緒，活化大腦專注區</p>
+                    <div class="muyu-container" onclick="tapMuyu(event)">
+                        <div class="muyu-img" id="muyu-pic"></div>
+                        <div class="muyu-stick" id="muyu-stick"></div>
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--primary-gold);">
+                        雜念消除度：<span id="gongde-count" style="font-weight:bold; font-size: 1.1rem;">0</span> | 焦慮感：<span id="anxiety-level" style="font-weight:bold; font-size: 1.1rem; color: var(--calm-teal);">100%</span>
+                    </div>
+                </div>
+
+                <div class="stress-card">
+                    <h3><i class="fa-solid fa-scroll"></i> 史學名家方法論錦囊</h3>
+                    <p style="font-size: 0.8rem; color: #aaa; margin: 0 0 10px 0;">當你對宏大的歷史因果感到混亂時，請拆開名家錦囊</p>
+                    <div class="pouch-row">
+                        <button class="pouch-btn" onclick="openPouch('wisdom')">司馬遷論</button>
+                        <button class="pouch-btn" style="background: linear-gradient(135deg, #1d6e8a 0%, #0d3a4a 100%);" onclick="openPouch('calm')">陳壽史論</button>
+                        <button class="pouch-btn" style="background: linear-gradient(135deg, #1b8a5a 0%, #0c4a30 100%);" onclick="openPouch('courage')">劉知幾論</button>
+                    </div>
+                    <div id="pouch-content">點擊按鈕，解鎖頂級史學家對「如何梳理宏大歷史因果」的思維開導...</div>
+                </div>
+
+                <div class="stress-card">
+                    <h3><i class="fa-solid fa-wind"></i> 歷史心流・太極吐納</h3>
+                    <p style="font-size: 0.8rem; color: #aaa; margin: 0 0 10px 0;">配合動態光圈，深呼吸沉澱大腦，迎接跨章節申論考驗</p>
+                    <div class="breathing-ring-container">
+                        <div class="breathing-ring" id="b-ring">吸氣</div>
+                    </div>
+                    <div class="breathing-instructions" id="b-txt">沉著吐納，活化記憶檢索...</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function updateProgress() {
+            const categories = ['wei', 'shu', 'wu'];
+            let totalChecked = 0, totalCount = 0;
+
+            categories.forEach(cat => {
+                const checkboxes = document.querySelectorAll(`.${cat}-cb`);
+                const checked = document.querySelectorAll(`.${cat}-cb:checked`);
+                const percent = checkboxes.length ? Math.round((checked.length / checkboxes.length) * 100) : 0;
+                
+                document.getElementById(`${cat}-percent`).innerText = `${percent}%`;
+                document.getElementById(`${cat}-bar`).style.width = `${percent}%`;
+                
+                totalChecked += checked.length;
+                totalCount += checkboxes.length;
+            });
+
+            const totalPercent = Math.round((totalChecked / totalCount) * 100);
+            let rank = "初出茅廬";
+            if (totalPercent >= 20) rank = "史館編修（通曉章節）";
+            if (totalPercent >= 50) rank = "博古通今（洞悉因果）";
+            if (totalPercent >= 80) rank = "史學大家（融會史觀）";
+            if (totalPercent === 100) rank = "太史公再世（通史融會貫通！）";
+
+            document.getElementById('strategist-rank').innerText = `${rank} (歷史版圖解鎖進度: ${totalPercent}%)`;
+        }
+
+        // === 真正聚焦於「三國純歷史局勢與博弈」的六大情境題庫 ===
+        const quizData = [
+            {
+                title: "【第一戰：官渡之戰・北方氏族利益博弈】",
+                question: "建安五年曹操與袁紹對峙於官渡。袁紹出身『汝南袁氏』四世三公，麾下吸納了大批「河南、汝南世族」；然而其大本營在冀州，這導致「冀州本土豪族」（如審配、沮授）與外來豪族政治利益嚴重衝突、內部派系傾軋。此時曹操糧草將盡，許攸卻因家人在後方犯罪被審配扣押而憤而投曹，獻計奇襲烏巢。如果你是曹操，你該如何評估此計的真實性？",
+                options: [
+                    { text: "A. 懷疑這是袁紹誘敵深入的陰謀。因為袁紹兵力高達十萬，而己方僅有兩萬，防守官渡基本盤才是符合兵法的安全決策。", correct: false, reason: "【歷史覆盤】如果死守官渡，將忽視袁紹陣營內部「汝南派與冀州派」根深蒂固的政治裂痕。袁紹因門閥包袱無法整合內部矛盾，許攸叛逃極具歷史合理性，死守只會導致糧盡潰敗。" },
+                    { text: "B. 精準洞察袁紹陣營內部氏族派系的割裂本質，判定許攸因內部政治鬥爭而倒戈屬實，果斷親率步騎五千，偽裝成袁軍，連夜孤注一擲火燒烏巢糧倉。", correct: true, reason: "【歷史大捷！】精準！這正是跨章節整合「政權社會基礎」的精髓。官渡之戰表面是軍事戰，底層是氏族政治鬥爭。擊碎烏巢直接摧毀了袁氏集團脆弱的內部信任鏈，奠定北方統一基礎。" }
+                ],
+                sandDesc: "<strong>【戰役沙盤：官渡之戰】</strong>袁紹汝南豪族與冀州本土豪族的矛盾，導致後方失控。曹操跨河精準奇襲烏巢，一舉擊潰袁紹脆弱的聯盟體制。",
+                renderSandTable: function(layer) {
+                    layer.innerHTML = `
+                        <circle cx="350" cy="50" r="4" fill="#f1c40f" /><text x="360" y="55" class="city-label">鄴城 (袁紹大本營)</text>
+                        <path d="M 350 50 Q 360 85 365 110" class="march-line" stroke="#f1c40f" />
+                        <circle cx="340" cy="140" r="4" fill="#54a0ff" /><text x="290" y="145" class="city-label">官渡 (曹操大寨)</text>
+                        <circle cx="365" cy="120" r="8" class="clash-point" />
+                        <circle cx="410" cy="80" r="6" fill="none" stroke="#ff9f43" stroke-width="2" class="clash-point" />
+                        <text x="425" y="85" class="city-label" style="fill:#ff9f43; font-weight:bold;">烏巢 (糧倉內訌點)</text>
+                        <path d="M 340 140 Q 380 120 410 80" class="march-line special-march" marker-end="url(#arrow-special)" />
+                    `;
+                }
+            },
+            {
+                title: "【第二戰：赤壁之戰・孫劉聯盟的底層地緣戰略】",
+                question: "建安十三年曹操全面佔領荊州水陸要地，順流而下。在東吳內部，江東豪族（如張昭）基於保全家族土地與政治特權的利益，極力主張「投降迎曹」；而江東少壯派軍事集團（如周瑜）則主張聯劉抗曹。如果你是諸葛亮，在說服孫權時，如何動用歷史底層的「地緣與階級矛盾」來促成聯盟？",
+                options: [
+                    { text: "A. 只強調劉備兵力尚存，以及關羽水軍和劉琦軍隊共兩萬人，試圖在純軍事數字上與曹操的二十萬大軍平起平坐。", correct: false, reason: "【歷史覆盤】無效說服。在絕對兵力劣勢下，純軍事數字無法動搖東吳群臣。江東豪族根本不在乎劉備生死，這種說法會讓東吳更傾向投降以自保。" },
+                    { text: "B. 洞悉「江東豪族」與「孫氏外來軍事政權」的同床異夢，指出『臣下降曹人人可得一官半職，唯將軍降曹無容身之地』，並利用曹操不善水戰、長途跋涉的補給極限，促成外來政權與地方武力的戰略結盟。", correct: true, reason: "【歷史大捷！】精闢！赤壁之戰的本質是地緣政治與利益重組。你成功點破了孫權個人利益與豪族利益的背離，並結合長江天險的地緣優勢，促成了三國鼎立的關鍵火攻。" }
+                ],
+                sandDesc: "<strong>【戰役沙盤：赤壁之戰】</strong>曹操自荊州順江而下，孫劉聯軍利用長江天險阻擊。長江水戰受制於地理與風向，火攻烏林成為逆轉地緣劣勢的核心戰略。",
+                renderSandTable: function(layer) {
+                    layer.innerHTML = `
+                        <circle cx="340" cy="285" r="4" fill="#54a0ff" /><text x="270" y="285" class="city-label">烏林 (曹軍水寨)</text>
+                        <circle cx="380" cy="325" r="4" fill="#1dd1a1" /><text x="395" y="335" class="city-label">赤壁 (周瑜大寨)</text>
+                        <circle cx="360" cy="305" r="8" class="clash-point" />
+                        <path d="M 450 360 L 380 270" class="march-line special-march" marker-end="url(#arrow-special)" style="stroke-width:4;" />
+                        <text x="430" y="330" class="city-label" style="fill:#ff9f43; font-weight:bold;">冬至東南風</text>
+                    `;
+                }
+            },
+            {
+                title: "【第三戰：荊州爭奪戰・隆中對的戰略悖論與雙線崩潰】",
+                question: "《隆中對》的終極藍圖是「跨有荊、益」，待天下有變，則命一上將將荊州之軍以向宛、洛，將軍身率益州之眾出於秦川。然而在地緣歷史現實中，荊州乃是東吳長江防線的「命門之首」，東吳絕不可能容忍蜀漢長期扼守長江上游。當關羽北伐襄樊、威震華夏之時，蜀漢正面臨《隆中對》的最大內在戰略矛盾，此時你該如何調整防線？",
+                options: [
+                    { text: "A. 堅信「外結孫權」的盟約牢不可破，讓關羽將荊州後方的守軍全部抽調前往樊聯，堅信東吳會顧全大局、共同抗曹。", correct: false, reason: "【歷史覆盤】這導致了歷史上『大意失荊州』的悲劇。東吳的「限江自保」國策具有絕對排他性，關羽北伐越成功，東吳的地理安全威脅就越大。忽視盟友的生存底線，必遭呂蒙白衣渡江背刺。" },
+                    { text: "B. 洞悉《隆中對》雙線出擊導致兵力分散、且與東吳核心地緣利益衝突的「戰略悖論」。立刻勒令關羽暫緩北伐，與東吳重新劃定荊州利益，甚至適度讓步，以確保戰略基本盤不發生連鎖崩潰。", correct: true, reason: "【歷史大捷！】高階的歷史因果思維！《隆中對》理想化了孫劉聯盟。如果能意識到荊州對東吳的地緣敏感性，採取戰略防禦與利益妥協，就能避免蜀漢元氣大傷、退守益州的連鎖歷史悲劇。" }
+                ],
+                sandDesc: "<strong>【戰役沙盤：荊州爭奪戰】</strong>關羽北伐襄樊，導致荊州後方空虛。呂蒙看準蜀漢「雙線分兵」的地緣漏洞，白衣渡江奇襲荊州，引發蜀漢國運的重大轉折。",
+                renderSandTable: function(layer) {
+                    layer.innerHTML = `
+                        <circle cx="340" cy="220" r="4" fill="#54a0ff" /><text x="355" y="220" class="city-label">襄樊 (關羽進攻點)</text>
+                        <path d="M 340 260 L 340 225" class="march-line shu-march" />
+                        <circle cx="480" cy="270" r="5" fill="#1dd1a1" />
+                        <path d="M 480 270 Q 410 260 345 260" class="march-line special-march" marker-end="url(#arrow-special)" />
+                        <text x="390" y="245" class="city-label" style="fill:#ff9f43; font-weight:bold;">呂蒙白衣渡江線</text>
+                    `;
+                }
+            },
+            {
+                title: "【第四戰：夷陵之戰・政治正統性與地緣非理性的博弈】",
+                question: "章武元年劉備為報關羽之仇，不顧趙雲等理智派的反對，悍然傾全國之兵發動「夷陵之戰」東征孫吳。從歷史因果來看，劉備此舉表面是兄弟復仇，底層卻是為了維護蜀漢政權「興復漢室、有仇必報」的政治合法性骨氣。然而，陸遜採取誘敵深入戰略，逼迫蜀軍在炎熱的夏季進入硤江深山，劉備無奈下令「依山傍水，連營七百里」。你如何從史學角度評價這個歷史悲劇？",
+                options: [
+                    { text: "A. 認為劉備用兵如神，連營七百里是為了在崇山峻嶺中尋找水源並庇蔭士兵，純粹是運氣不好遇到了陸遜火攻。", correct: false, reason: "【歷史覆盤】這是缺乏歷史地理學常識的看法。在狹長、樹木茂密的縱深山谷中實施「線型連營」，將導致兵力極度分散，且後勤補給線被拉得無比脆弱。這給了陸遜集中優勢兵力、實施「點狀火攻突破」的絕佳戰術空間。" },
+                    { text: "B. 指出這是蜀漢「政治正統性（必須復仇）」壓倒「軍事理性（地理劣勢）」的典型歷史因果連鎖。蜀軍犯了兵法大忌，將複雜的立體攻防戰打成了無法互相救援的扁平消耗戰，注定被火攻一觸即潰。", correct: true, reason: "【歷史大捷！】卓越的史學思辨！你成功結合了政治史與戰術地理學。夷陵之戰的潰敗，讓蜀漢徹底喪失了東出荊州、兩路並進的可能性，終生只能受困於益州盆地。" }
+                ],
+                sandDesc: "<strong>【戰役沙盤：夷陵之戰】</strong>蜀軍在硤江深山中形成連營七百里的扁平陣線。陸遜抓住蜀軍後勤拉長、兵力分散的結構性致命漏洞，順風發動點狀火攻全線擊潰。",
+                renderSandTable: function(layer) {
+                    layer.innerHTML = `
+                        <path d="M 220 310 Q 250 290 280 300 T 340 295" fill="none" stroke="#ff6b6b" stroke-width="4" stroke-dasharray="10, 5" />
+                        <text x="200" y="280" class="city-label" style="fill:#ff6b6b; font-weight:bold;">蜀軍連營七百里</text>
+                        <circle cx="280" cy="300" r="8" class="clash-point" />
+                        <circle cx="320" cy="295" r="8" class="clash-point" style="animation-delay: 0.3s;" />
+                        <path d="M 370 310 L 330 300" class="march-line wu-march" marker-end="url(#arrow-wu)" />
+                    `;
+                }
+            },
+            {
+                title: "【第五戰：七擒孟獲・南中政治整合與北伐後勤因果鏈】",
+                question: "蜀漢建興三年諸葛亮發動南中戰役。當時南中夷漢混雜，大姓豪族與蠻王孟獲煽動叛亂。諸葛亮採取馬謖『攻心為上，攻城為下』的策略，實施「七擒七縱」。如果僅從軍事效率來看，這極其浪費時間與資源。請運用跨章節的「政治經濟學因果鏈」，剖析諸葛亮非要讓孟獲「心服口服」的歷史深層動機是什麼？",
+                options: [
+                    { text: "A. 純粹是基於儒家仁義道德的文化作風，希望向天下展現蜀漢是正統仁義之師，其目的在於沽名釣譽。", correct: false, reason: "【歷史覆盤】忽視了歷史唯物主義與地緣現實。蜀漢此時國力疲弱，諸葛亮作為極度務實的政治家，絕不可能為了虛名虛耗軍隊。純粹的道德感無法維持南中的長期穩定。" },
+                    { text: "B. 洞悉蜀漢北伐的底層結構！若用武力血洗南中，一旦大軍北伐曹魏，後方必再度叛亂。唯有徹底完成南中政治整合（心服），才能將南中從「反叛包袱」轉化為北伐的「大後方經濟物資、戰馬與青羌勁旅兵源基地」。", correct: true, reason: "【歷史大捷！】非常深刻！你成功打通了章節之間的隱藏因果鏈。南中平定與諸葛亮北伐不是獨立事件，而是「後勤與前線」的咬合關係。七擒孟獲的『攻心』，為蜀漢北伐換來了源源不絕的南中資源與穩定的後方。" }
+                ],
+                sandDesc: "<strong>【戰役沙盤：七擒孟獲】</strong>南中戰役是一場以「政治整合」為目標的攻心戰。在瀘水（南方大川）兩岸反覆交鋒，目的是徹底降伏地方勢力，使其轉化為北伐的物資後方。",
+                renderSandTable: function(layer) {
+                    layer.innerHTML = `
+                        <path d="M 100 340 Q 250 270 450 320" class="river" stroke="#1d4d3f" />
+                        <text x="280" y="295" class="city-label" style="fill:#1dd1a1;">瀘水 (南中蠻荒)</text>
+                        <circle cx="200" cy="150" r="5" fill="#ff6b6b" /><text x="150" y="145" class="city-label" style="fill:#ff6b6b;">孔明南征軍</text>
+                        <circle cx="340" cy="230" r="5" fill="#ff9f43" /><text x="355" y="235" class="city-label" style="fill:#ff9f43;">孟獲蠻營</text>
+                        <path d="M 200 150 Q 280 130 340 230" class="march-line special-march" marker-end="url(#arrow-special)" />
+                        <path d="M 340 230 Q 240 260 200 150" class="march-line special-march" stroke-dasharray="4,4" style="stroke:#1dd1a1;" />
+                    `;
+                }
+            },
+            {
+                title: "【第六戰：諸葛亮北伐・祁山防線與曹魏戰略防禦】",
+                question: "諸葛亮五出祁山，北伐曹魏。在後期對決中，曹魏大都督司馬懿敏銳地看穿了蜀漢的「致命結構缺陷」：益州山道險峻，糧草轉運極度困難，蜀軍利在速戰，缺糧則必退。因此司馬懿在渭水一線實施「堅壁清野、誓不出戰」的極致防禦戰略，甚至面對諸葛亮送來的女裝羞辱也隱忍不發。此時，歷史考驗著兩大政權在「消耗戰底層國力」的對決，你如何論證諸葛亮北伐的終局命運？",
+                options: [
+                    { text: "A. 認為諸葛亮只要發明木牛流馬就能徹底解決地理運輸限制，魏軍不出戰純粹是因為膽怯，蜀漢如果一直打下去一定能興復漢室。", correct: false, reason: "【歷史覆盤】流於文學想像。木牛流馬僅能稍微優化山道運輸效率，無法從根本上扭轉「蜀漢僅憑益州一州之地，對抗曹魏中原九州」的絕對人口與經濟體量差距。司馬懿拼的是底層國力的消耗，不出戰是最高明的歷史戰略。" },
+                    { text: "B. 深刻指出魏蜀北伐本質上是「區域政權（單一盆地經濟）對抗中央帝國（中原農業經濟）」的非對稱消耗戰。司馬懿透過『時間與糧草』成功封鎖了諸葛亮的戰術天賦，諸葛亮鞠躬盡瘁、星落秋風五丈原具有歷史體量差距的必然性。", correct: true, reason: "【歷史大捷！】極其客觀、宏大的史學眼光！你沒有流於英雄主義，而是從「經濟基礎決定上層軍事」的底層邏輯出發。諸葛亮北伐是以攻為守的政治宣示，而司馬懿的堅守則展現了大帝國在消耗戰中的體量優勢。" }
+                ],
+                sandDesc: "<strong>【戰役沙盤：諸葛北伐】</strong>蜀漢五出祁山，受制於蜀道難。司馬懿依託渭水防線實施「堅壁清野」，利用中原大體量的經濟優勢，活活將蜀軍的後勤拖垮。",
+                renderSandTable: function(layer) {
+                    layer.innerHTML = `
+                        <circle cx="200" cy="210" r="5" fill="#ff6b6b" /><text x="170" y="200" class="city-label" style="fill:#ff6b6b; font-weight:bold;">漢中大本營</text>
+                        <path d="M 200 210 Q 180 170 190 140" class="march-line shu-march" marker-end="url(#arrow-shu)" />
+                        <path d="M 200 210 Q 240 180 270 160" class="march-line shu-march" marker-end="url(#arrow-shu)" />
+                        <rect x="170" y="125" width="130" height="15" fill="none" stroke="#54a0ff" stroke-width="2" stroke-dasharray="5,5" />
+                        <text x="195" y="120" class="city-label" style="fill:#54a0ff; font-weight:bold;">司馬懿渭水防線</text>
+                    `;
+                }
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        function initSandTableTabs() {
+            const tabsContainer = document.getElementById('sand-table-tabs');
+            tabsContainer.innerHTML = '';
+            quizData.forEach((quiz, index) => {
+                const btn = document.createElement('button');
+                btn.className = `tab-btn ${index === 0 ? 'active' : ''}`;
+                btn.innerText = `戰役 ${index + 1}`;
+                btn.onclick = () => selectSandTableTab(index);
+                tabsContainer.appendChild(btn);
+            });
+            selectSandTableTab(0);
+        }
+
+        function selectSandTableTab(index) {
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach((btn, idx) => {
+                if (idx === index) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+
+            const tacticalLayer = document.getElementById('tactical-layer');
+            tacticalLayer.innerHTML = ''; 
+            if (quizData[index] && quizData[index].renderSandTable) {
+                quizData[index].renderSandTable(tacticalLayer);
+            }
+            document.getElementById('sand-table-desc').innerHTML = quizData[index].sandDesc || '無說明';
+        }
+
+        function loadQuestion() {
+            const currentQuiz = quizData[currentQuestionIndex];
+            document.getElementById('battle-index').innerText = `事件 ${currentQuestionIndex + 1} / ${quizData.length}`;
+            document.getElementById('battle-name').innerText = currentQuiz.title;
+            document.getElementById('battle-question').innerText = currentQuiz.question;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            currentQuiz.options.forEach((option) => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.innerText = option.text;
+                button.onclick = () => checkAnswer(option);
+                optionsContainer.appendChild(button);
+            });
+
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'none';
+            document.querySelector('.battle-box').classList.add('active-border');
+            selectSandTableTab(currentQuestionIndex);
+        }
+
+        function checkAnswer(option) {
+            const feedbackDiv = document.getElementById('feedback');
+            feedbackDiv.style.display = 'block';
+            
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (option.correct) {
+                feedbackDiv.className = "success";
+                feedbackDiv.innerHTML = `<i class="fa-solid fa-circle-check"></i> <strong>歷史洞察成功！</strong><br>${option.reason}`;
+                modifyAnxiety(-15);
+            } else {
+                feedbackDiv.className = "failure";
+                feedbackDiv.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <strong>史觀流於表面！</strong><br>${option.reason}`;
+                modifyAnxiety(10);
+            }
+            document.getElementById('next-btn').style.display = 'block';
+            document.querySelector('.battle-box').classList.remove('active-border');
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                document.getElementById('battle-index').innerText = "推演全數完成";
+                document.getElementById('battle-status').innerText = "史筆昭然";
+                document.getElementById('battle-name').innerText = "【三國歸晉・史學大成】";
+                document.getElementById('battle-question').innerText = "恭喜歷史學家！你已成功攻克六大經典歷史戰略決策。你從底層氏族博弈、長江地緣矛盾、雙線分兵悖論、政權正統性限制以及魏蜀非對稱國力消耗等多元維度，完成了高強度的跨章節史學因果鏈特訓。你已具備卓越的歷史思辨視野！";
+                document.getElementById('options-container').innerHTML = '';
+                document.getElementById('feedback').style.display = 'none';
+                document.getElementById('next-btn').style.display = 'none';
+
+                const tacticalLayer = document.getElementById('tactical-layer');
+                tacticalLayer.innerHTML = `
+                    <circle cx="300" cy="190" r="15" fill="none" stroke="var(--primary-gold)" stroke-width="3" class="clash-point" />
+                    <text x="230" y="240" class="city-label" style="fill:var(--primary-gold); font-size:16px; font-weight:bold;">三國歸晉・通史融會貫通！</text>
+                `;
+                document.getElementById('sand-table-desc').innerHTML = "<strong>【終局：三分歸晉】</strong>歷史大勢，分久必合。恭喜你完成了全部三國史實的核心博弈推演！";
+            }
+        }
+
+        // ==========================================
+        // === 史學草堂控制碼（純代碼音效合成） ===
+        // ==========================================
+        let meritCount = 0, anxietyLevel = 100;
+
+        function playMuyuSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator(), gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(380, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.5, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+                osc.connect(gain); gain.connect(ctx.destination);
+                osc.start(); osc.stop(ctx.currentTime + 0.15);
+            } catch (e) {}
+        }
+
+        function tapMuyu(event) {
+            playMuyuSound();
+            const muyu = document.getElementById('muyu-pic'), stick = document.getElementById('muyu-stick');
+            muyu.style.transform = "scale(0.92)"; stick.style.transform = "rotate(10deg)";
+            setTimeout(() => { muyu.style.transform = "scale(1)"; stick.style.transform = "rotate(30deg)"; }, 60);
+
+            meritCount++;
+            document.getElementById('gongde-count').innerText = meritCount;
+            modifyAnxiety(-2);
+
+            const container = event.currentTarget, rect = container.getBoundingClientRect();
+            const merits = ["思緒澄清", "通曉古今", "焦慮感 -5", "史料檢索路徑活化", "理智度 +10", "心流湧現"];
+            const randomText = merits[Math.floor(Math.random() * merits.length)];
+            
+            const floatLabel = document.createElement('div');
+            floatLabel.className = 'float-text'; floatLabel.innerText = randomText;
+            const x = event.clientX - rect.left, y = event.clientY - rect.top;
+            floatLabel.style.left = `${x}px`; floatLabel.style.top = `${y}px`;
+            container.appendChild(floatLabel);
+            setTimeout(() => floatLabel.remove(), 800);
+        }
+
+        function modifyAnxiety(value) {
+            anxietyLevel += value;
+            if (anxietyLevel > 100) anxietyLevel = 100;
+            if (anxietyLevel < 0) anxietyLevel = 0;
+            document.getElementById('anxiety-level').innerText = `${anxietyLevel}%`;
+            document.getElementById('anxiety-level').style.color = anxietyLevel < 40 ? '#2ecc71' : (anxietyLevel < 75 ? 'var(--calm-teal)' : 'var(--shu-red)');
+        }
+
+        const pouchTexts = {
+            wisdom: "<strong>【太史公・司馬遷】之開導：</strong><br>『究天人之際，通古今之變，成一家之言。』解鎖歷史，切忌死記孤立的年份與事件。任何政權的勃興與戰役的勝負，背後皆是政治制度、地緣地理與經濟利益積累的必然結果。將史料看作拼圖，找出它在因果鏈中的位置，歷史便不再需要死背，而是水到渠成的邏輯推演。",
+            calm: "<strong>【三國志・陳壽】之開導：</strong><br>『評曰：諸葛亮將略非其所長，治國之能優於將略。』看歷史要抽離情感，保持絕對的客觀。在評析歷史局勢時，最忌諱帶著個人的崇拜或偏見去評價歷史事件。冷靜列出當時政權的經濟數據與地緣限制，用證據說話，你的歷史論證自然無懈可擊。",
+            courage: "<strong>【史通・劉知幾】之開導：</strong><br>『史才、史學、史識，三者缺一不可，而史識最為難得。』所謂史識，就是你在面對複雜、甚至從未見過的史料情境時，敢於用底層的歷史運行規律去大膽剖析、建立批判性假設的勇氣。相信你在前面解鎖的政權結構網絡，大膽推演，歷史的大門自會為你敞開！"
+        };
+
+        function openPouch(type) {
+            document.getElementById('pouch-content').innerHTML = pouchTexts[type];
+            playMuyuSound(); modifyAnxiety(-5);
+        }
+
+        let breathState = 0;
+        const ring = document.getElementById('b-ring'), txt = document.getElementById('b-txt');
+        function runBreathing() {
+            if (breathState === 0) {
+                ring.style.transform = "scale(1.4)"; ring.style.backgroundColor = "rgba(0, 210, 243, 0.35)"; ring.innerText = "吸氣";
+                txt.innerText = "緩慢深吸氣，將精神集中於歷史思維網絡... (4秒)"; breathState = 1;
+            } else if (breathState === 1) {
+                ring.innerText = "持氣"; ring.style.backgroundColor = "rgba(212, 175, 55, 0.25)";
+                txt.innerText = "閉氣沉澱，在腦海中清空與當下無關的考場雜念... (4秒)"; breathState = 2;
+            } else if (breathState === 2) {
+                ring.style.transform = "scale(0.85)"; ring.style.backgroundColor = "rgba(0, 210, 243, 0.1)"; ring.innerText = "呼氣";
+                txt.innerText = "緩緩吐氣，放鬆肩膀，準備迎戰深度史學思辨... (4秒)"; modifyAnxiety(-3); breathState = 0;
+            }
+        }
+        setInterval(runBreathing, 4000);
+
+        window.onload = function() {
+            initSandTableTabs();
+            loadQuestion();
+            runBreathing();
+        };
+    </script>
+</body>
+</html>
